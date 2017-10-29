@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ebnf" style="width: 699px; height: 416px;"><style>svg rect.term {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg a.nterm:hover rect {
+  fill: lightgrey;
+}
+
+svg rect.term {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg polygon.special {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg rect.nterm {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg .path {
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg text {
+  fill: black;
+  font-weight: bold;
+}
+
+svg .circleS {
+  fill: none;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg .circleE {
+  fill: &quot;black&quot;;
+  stroke: black;
+  stroke-width: 2;
+}</style><g transform="translate(0,5)"><polygon points="15 9, 15 19, 25 14" class="triangle"></polygon><circle cx="4" cy="14" r="3" class="circleS"></circle><path class="path" fill="none" stroke-width="2" d="m 7 14 h 28"></path><polygon points="677 9, 677 19, 687 14" class="triangle"></polygon><circle cx="695" cy="14" r="3" class="circleE"></circle><path class="path" fill="none" stroke-width="2" d="m 668 14 h 28"></path><g transform="translate(31,0)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 637"></path><g transform="translate(0,0)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 609"></path><g transform="translate(0,0)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">&quot;</text></g><g transform="translate(28,0)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 581 c -10 0 -14 4 -14 14 v 7 M 0 14 c 10 0 14 4 14 14 v 7"></path><path class="path" fill="none" stroke-width="2" d="M 14 35 v 28 c 0 10 4 14 14 14 M 567 35 v 28 c 0 10 -4 14 -14 14 h 0"></path><g transform="translate(28,35)"><path class="path" fill="none" stroke-width="2" d="m 0 42 h 28 c -10 0 -14 -4 -14 -14 v 0 c 0 -10 4 -14 14 -14 h 469 c 10 0 14 4 14 14 v 0 c 0 10 -4 14 -14 14 h 28 z"></path><g transform="translate(28,28)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 469 c -10 0 -14 4 -14 14 v 7 M 0 14 c 10 0 14 4 14 14 v 7"></path><path class="path" fill="none" stroke-width="2" d="M 14 35 v 0 c 0 10 4 14 14 14 M 455 35 v 0 c 0 10 -4 14 -14 14 h 0"></path><g transform="translate(28,35)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 413"></path><g transform="translate(0,0)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">\</text></g><g transform="translate(28,0)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 385 c -10 0 -14 4 -14 14 v 252 M 0 14 c 10 0 14 4 14 14 v 252"></path><path class="path" fill="none" stroke-width="2" d="M 14 280 v 0 c 0 10 4 14 14 14 M 371 280 v 0 c 0 10 -4 14 -14 14 h 0"></path><path class="path" fill="none" stroke-width="2" d="M 14 245 v 0 c 0 10 4 14 14 14 M 371 245 v 0 c 0 10 -4 14 -14 14 h -308"></path><path class="path" fill="none" stroke-width="2" d="M 14 210 v 0 c 0 10 4 14 14 14 M 371 210 v 0 c 0 10 -4 14 -14 14 h -308"></path><path class="path" fill="none" stroke-width="2" d="M 14 175 v 0 c 0 10 4 14 14 14 M 371 175 v 0 c 0 10 -4 14 -14 14 h -308"></path><path class="path" fill="none" stroke-width="2" d="M 14 140 v 0 c 0 10 4 14 14 14 M 371 140 v 0 c 0 10 -4 14 -14 14 h -308"></path><path class="path" fill="none" stroke-width="2" d="M 14 105 v 0 c 0 10 4 14 14 14 M 371 105 v 0 c 0 10 -4 14 -14 14 h -308"></path><path class="path" fill="none" stroke-width="2" d="M 14 70 v 0 c 0 10 4 14 14 14 M 371 70 v 0 c 0 10 -4 14 -14 14 h -308"></path><path class="path" fill="none" stroke-width="2" d="M 14 35 v 0 c 0 10 4 14 14 14 M 371 35 v 0 c 0 10 -4 14 -14 14 h -308"></path><g transform="translate(28,280)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 329"></path><g transform="translate(0,0)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">u</text></g><g transform="translate(28,0)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 301"></path><g transform="translate(0,0)"><a xlink:href="#hexDigit" class="nterm"><rect width="70" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">hexDigit</text></a></g><g transform="translate(77,0)"><a xlink:href="#hexDigit" class="nterm"><rect width="70" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">hexDigit</text></a></g><g transform="translate(154,0)"><a xlink:href="#hexDigit" class="nterm"><rect width="70" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">hexDigit</text></a></g><g transform="translate(231,0)"><a xlink:href="#hexDigit" class="nterm"><rect width="70" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">hexDigit</text></a></g></g></g><g transform="translate(28,245)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">t</text></g><g transform="translate(28,210)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">r</text></g><g transform="translate(28,175)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">n</text></g><g transform="translate(28,140)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">f</text></g><g transform="translate(28,105)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">b</text></g><g transform="translate(28,70)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">/</text></g><g transform="translate(28,35)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">\</text></g><g transform="translate(28,0)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">&quot;</text></g></g></g><g transform="translate(28,0)"><polygon class="special" points="0,11 11,0 346,0 357,11 357,17 346,28 11,28 0, 17"></polygon><text x="7" y="18" font-family="monospace" fill="white">Any UNICODE char except: &quot; \ or control character</text></g></g></g><g transform="translate(28,0)"></g></g></g><g transform="translate(616,0)"><rect class="term" rx="10" ry="10" width="21" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">&quot;</text></g></g></g></svg>

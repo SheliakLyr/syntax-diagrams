@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="ebnf" style="width: 174px; height: 248px;"><style>svg rect.term {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg a.nterm:hover rect {
+  fill: lightgrey;
+}
+
+svg rect.term {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg polygon.special {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg rect.nterm {
+  fill: white;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg .path {
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg text {
+  fill: black;
+  font-weight: bold;
+}
+
+svg .circleS {
+  fill: none;
+  stroke: black;
+  stroke-width: 2;
+}
+
+svg .circleE {
+  fill: &quot;black&quot;;
+  stroke: black;
+  stroke-width: 2;
+}</style><g transform="translate(0,5)"><polygon points="15 9, 15 19, 25 14" class="triangle"></polygon><circle cx="4" cy="14" r="3" class="circleS"></circle><path class="path" fill="none" stroke-width="2" d="m 7 14 h 28"></path><polygon points="152 9, 152 19, 162 14" class="triangle"></polygon><circle cx="170" cy="14" r="3" class="circleE"></circle><path class="path" fill="none" stroke-width="2" d="m 143 14 h 28"></path><g transform="translate(31,0)"><path class="path" fill="none" stroke-width="2" d="m 0 14 h 112 c -10 0 -14 4 -14 14 v 182 M 0 14 c 10 0 14 4 14 14 v 182"></path><path class="path" fill="none" stroke-width="2" d="M 14 210 v 0 c 0 10 4 14 14 14 M 98 210 v 0 c 0 10 -4 14 -14 14 h -14"></path><path class="path" fill="none" stroke-width="2" d="M 14 175 v 0 c 0 10 4 14 14 14 M 98 175 v 0 c 0 10 -4 14 -14 14 h -7"></path><path class="path" fill="none" stroke-width="2" d="M 14 140 v 0 c 0 10 4 14 14 14 M 98 140 v 0 c 0 10 -4 14 -14 14 h -14"></path><path class="path" fill="none" stroke-width="2" d="M 14 105 v 0 c 0 10 4 14 14 14 M 98 105 v 0 c 0 10 -4 14 -14 14 h 0"></path><path class="path" fill="none" stroke-width="2" d="M 14 70 v 0 c 0 10 4 14 14 14 M 98 70 v 0 c 0 10 -4 14 -14 14 h 0"></path><path class="path" fill="none" stroke-width="2" d="M 14 35 v 0 c 0 10 4 14 14 14 M 98 35 v 0 c 0 10 -4 14 -14 14 h -7"></path><g transform="translate(28,210)"><rect class="term" rx="10" ry="10" width="42" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">null</text></g><g transform="translate(28,175)"><rect class="term" rx="10" ry="10" width="49" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">false</text></g><g transform="translate(28,140)"><rect class="term" rx="10" ry="10" width="42" height="28"></rect><text x="7" y="18" font-family="monospace" fill="white">true</text></g><g transform="translate(28,105)"><a xlink:href="#number" class="nterm"><rect width="56" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">number</text></a></g><g transform="translate(28,70)"><a xlink:href="#string" class="nterm"><rect width="56" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">string</text></a></g><g transform="translate(28,35)"><a xlink:href="#array" class="nterm"><rect width="49" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">array</text></a></g><g transform="translate(28,0)"><a xlink:href="#object" class="nterm"><rect width="56" height="28" class="nterm"></rect><text x="7" y="18" font-family="monospace" fill="white">object</text></a></g></g></g></svg>
