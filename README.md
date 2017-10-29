@@ -40,4 +40,4 @@ Example
 See [ExamplesRunner.scala](src/test/scala/com/github/sheliaklyr/ebnf/ExamplesRunner.scala) 
 for example that generates a single html page with syntax diagrams for JSON. 
 You can see the generated page here: 
-[JSON Syntax](examples/diagrams/json/all.html) 
+[JSON Syntax](https://sheliaklyr.github.io/syntax-diagrams/) 
