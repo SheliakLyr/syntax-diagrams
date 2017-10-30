@@ -1,4 +1,4 @@
-package org.github.sheliaklyr.ebnf
+package com.github.sheliaklyr.ebnf
 
 case class Rule(rhs: Expr, referredBy: Set[String]) {
   lazy val references: Set[String] = rhs.references

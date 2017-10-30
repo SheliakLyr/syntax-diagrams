@@ -1,9 +1,9 @@
-package org.github.sheliaklyr.ebnf
+package com.github.sheliaklyr.ebnf
 
-import java.io.{BufferedOutputStream, File, FileOutputStream, FileWriter}
+import java.io.{BufferedOutputStream, File, FileOutputStream}
 
-import org.github.sheliaklyr.ebnf.diagram.SVG
-import org.github.sheliaklyr.ebnf.diagram.SVG.Options
+import com.github.sheliaklyr.ebnf.diagram.SVG
+import com.github.sheliaklyr.ebnf.diagram.SVG.Options
 
 object ExamplesRunner {
   def main(args: Array[String]) {
@@ -40,7 +40,7 @@ object ExamplesRunner {
     out.close()
   }
 
-  import Ebnf.{seq, choice, repSep, stringToTerm, ref}
+  import com.github.sheliaklyr.ebnf.Ebnf.{choice, ref, stringToTerm}
 
   val jsonEbnf: Grammar = Grammar(
     "json" -> ref("object").|(ref("array")),

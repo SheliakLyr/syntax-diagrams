@@ -1,4 +1,4 @@
-package org.github.sheliaklyr.ebnf.diagram
+package com.github.sheliaklyr.ebnf.diagram
 
 /**
  * 2D Vector

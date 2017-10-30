@@ -1,6 +1,7 @@
-package org.github.sheliaklyr.ebnf.diagram
+package com.github.sheliaklyr.ebnf.diagram
 
-import org.github.sheliaklyr.ebnf._
+import com.github.sheliaklyr.ebnf
+import com.github.sheliaklyr.ebnf._
 
 import scalatags.generic
 import scalatags.text.Builder
@@ -92,16 +93,19 @@ object SVG {
 
   private def path(): PathBuilder = PathBuilder(Nil)
 
-  val fontWidth = 7
-  val segmentSize = 7
-  val lineHeight = 28
+  private val fontWidth = 7
+  private val segmentSize = 7
+  private val lineHeight = 28
+  private val textLengthAttr = A.attr("textLength")
 
-  private def generateSymbolElements(s: Symbol)(implicit options: Options) = {
+  private def generateSymbolElements(s: ebnf.Symbol)(implicit options: Options) = {
     def textNode(clazz: scalatags.generic.AttrPair[scalatags.text.Builder, String]) = S.text(
       A.x := fontWidth,
       A.y := 18,
       A.fontFamily := "monospace",
+      A.fontSize := "12px",
       A.fill := "white",
+      textLengthAttr := s"${s.value.length * fontWidth}px",
       s.value)
     s match {
       case NonTerminal(ntValue) =>
@@ -141,7 +145,7 @@ object SVG {
   }
 
   private def generateSubGraph(expr: Expr, root: Boolean = false)(implicit options: Options): SubGraph = expr match {
-    case s: Symbol if s.value.isEmpty => // not shown
+    case s: ebnf.Symbol if s.value.isEmpty => // not shown
       SubGraph(
         lineHeight / 2,
         lineHeight / 2,
@@ -149,7 +153,7 @@ object SVG {
         Nil
       )
 
-    case s: Symbol =>
+    case s: ebnf.Symbol =>
       SubGraph(
         lineHeight / 2,
         lineHeight / 2,
@@ -200,7 +204,7 @@ object SVG {
       SubGraph(14, 14, Vec(w, h), els)
 
     // optimized rep1SepBy
-    case Sequence(Seq(base: Symbol, Optional(Repeat(Sequence(Seq(sep: Symbol, base_repeated: Symbol)))), rest@_*)) if base == base_repeated =>
+    case Sequence(Seq(base: ebnf.Symbol, Optional(Repeat(Sequence(Seq(sep: ebnf.Symbol, base_repeated: ebnf.Symbol)))), rest@_*)) if base == base_repeated =>
       val repeater = {
         val baseGraph = generateSubGraph(base)
         val sepGraph = generateSubGraph(sep)
@@ -227,7 +231,7 @@ object SVG {
 
       if (rest.isEmpty) repeater
       else {
-        val restGraph = generateSubGraph(Sequence(rest))
+        val restGraph = generateSubGraph(if (rest.size == 1) rest.head else Sequence(rest))
 
         val subGraphs = List(repeater, restGraph)
 
@@ -319,7 +323,7 @@ object SVG {
 
 
     // optimized * for single element
-    case Optional(Repeat(s: Symbol)) =>
+    case Optional(Repeat(s: ebnf.Symbol)) =>
       val e = generateSubGraph(s)
       val w = e.width + 8 * segmentSize
       val h = e.height + 4 * segmentSize
@@ -372,24 +376,18 @@ object SVG {
 
   def defaultStyle(rootClass: String = "ebnf"): String = {
     s"""
-       |svg rect.term {
-       |  fill: white;
-       |  stroke: black;
-       |  stroke-width: 2;
+       |svg a.nterm:hover {
+       |  text-decoration: underline;
        |}
        |
-       |svg a.nterm:hover rect {
+       |svg rect.term {
        |  fill: lightgrey;
-       |}
-       |
-       |svg rect.term {
-       |  fill: white;
        |  stroke: black;
        |  stroke-width: 2;
        |}
        |
        |svg polygon.special {
-       |  fill: white;
+       |  fill: lightgrey;
        |  stroke: black;
        |  stroke-width: 2;
        |}

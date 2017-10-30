@@ -1,4 +1,4 @@
-package org.github.sheliaklyr.ebnf
+package com.github.sheliaklyr.ebnf
 
 import org.scalatest._
 
