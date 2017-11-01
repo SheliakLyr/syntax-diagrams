@@ -4,6 +4,10 @@ package com.github.sheliaklyr.ebnf
  * Represents an EBNF expression.
  */
 sealed trait Expr {
+  /**
+    * Set of all non-terminals present in this expression.
+    * @return
+    */
   def references: Set[String]
   def | (e: Expr) : Expr = Choice(Seq(this, e))
   def ~ (e: Expr) : Expr = Sequence(Seq(this, e))
@@ -14,10 +18,27 @@ sealed trait Expr {
     Sequence(Seq.fill(occurrences)(this))
   def repSepBy(sep: Expr): Expr = (this ~ (sep ~ this).*).?
   def rep1SepBy(sep: Expr): Expr = this ~ (sep ~ this).*
+
+  /**
+    * Replace NonTerminals `ref` by given expression `by`
+    * @param ref NonTerminal to replace.
+    */
+  def inline(ref: String, by: Expr): Expr = mapBottomUp {
+    case NonTerminal(x) if x == ref => by
+    case otherwise =>
+      otherwise
+  }
+
+  /**
+    * Applies function `f` via recursive `mapBottomUp` on each subexpression,
+    * starting from the most nested expressions.
+    * @return Mapped expression.
+    */
+  def mapBottomUp(f: Expr => Expr): Expr
 }
 
 object Ebnf {
-  import scala.languageFeature.implicitConversions
+  import scala.language.implicitConversions
   implicit def stringToTerm(s: String): Expr = Terminal(s)
   def choice(s: Expr*): Expr = Choice(s)
   def seq(s: Expr*): Expr = Sequence(s)
@@ -35,6 +56,10 @@ object Ebnf {
 case class Sequence(es: Seq[Expr]) extends Expr {
   require(es.size >= 2)
   lazy val references: Set[String] = es.map(_.references).reduce(_ ++ _)
+
+  override def mapBottomUp(f: Expr => Expr): Expr = {
+    f(copy(es.map(_.mapBottomUp(f))))
+  }
 }
 
 /**
@@ -43,12 +68,18 @@ case class Sequence(es: Seq[Expr]) extends Expr {
 case class Choice(es: Seq[Expr]) extends Expr {
   require(es.size >= 2)
   lazy val references: Set[String] = es.map(_.references).reduce(_ ++ _)
+
+  override def mapBottomUp(f: Expr => Expr): Expr = {
+    f(copy(es.map(_.mapBottomUp(f))))
+  }
 }
 /**
  * At least once.
  */
 case class Repeat(e: Expr) extends Expr {
   def references: Set[String] = e.references
+
+  override def mapBottomUp(f: Expr => Expr): Expr = f(copy(e.mapBottomUp(f)))
 }
 
 /**
@@ -56,6 +87,8 @@ case class Repeat(e: Expr) extends Expr {
  */
 case class Optional(e: Expr) extends Expr {
   def references: Set[String] = e.references
+
+  override def mapBottomUp(f: Expr => Expr): Expr = f(copy(e.mapBottomUp(f)))
 }
 
 /**
@@ -65,6 +98,8 @@ sealed trait Symbol extends Expr {
   def value: String
 
   def references: Set[String] = Set.empty
+
+  override def mapBottomUp(f: Expr => Expr): Expr = f(this)
 }
 
 /**

@@ -19,20 +19,24 @@ object SVG {
   }
 
   /**
-   * @param i y-component of input
-   * @param o y-component of output
-   */
+    * @param i y-component of input
+    * @param o y-component of output
+    */
   private case class SubGraph(
-    i: Int,
-    o: Int,
-    size: Vec,
-    elements: Seq[TypedTag[String]]
-  ) {
+                               i: Int,
+                               o: Int,
+                               size: Vec,
+                               elements: Seq[TypedTag[String]]
+                             ) {
     def width: Int = size.x
+
     def height: Int = size.y
+
     val belowInput: Int = height - i
     val belowOutput: Int = height - o
+
     def inputsDiff: Int = o - i
+
     def translated(x: Int, y: Int): TypedTag[String] =
       translate(x, y, elements: _*)
   }
@@ -95,8 +99,14 @@ object SVG {
 
   private val fontWidth = 7
   private val segmentSize = 7
-  private val lineHeight = 28
+  private val lineHeight = segmentSize * 4
+  private val halfLine = segmentSize * 2
+  private val textBoxSidePadding = fontWidth
   private val textLengthAttr = A.attr("textLength")
+
+  private def textWidth(s: String): Int = s.length * fontWidth
+
+  private def textBoxWidth(s: String): Int = textWidth(s) + 2 * textBoxSidePadding
 
   private def generateSymbolElements(s: ebnf.Symbol)(implicit options: Options) = {
     def textNode(clazz: scalatags.generic.AttrPair[scalatags.text.Builder, String]) = S.text(
@@ -107,24 +117,34 @@ object SVG {
       A.fill := "white",
       textLengthAttr := s"${s.value.length * fontWidth}px",
       s.value)
+
     s match {
       case NonTerminal(ntValue) =>
-        val linkTo = options.linker(ntValue)
-        Seq(
-          a(
-            if (linkTo.isEmpty) raw("")
-            else attr("xlink:href") := "#" + ntValue,
-            CssClass.nterm,
-            S.rect(
-              A.width := ntValue.length * fontWidth + 2 * fontWidth,
-              A.height := lineHeight,
-              CssClass.nterm),
-            textNode(CssClass.nterm)
-          )
-        )
+        options.linker(ntValue) match {
+          case "" =>
+            Seq(
+              S.rect(
+                A.width := textBoxWidth(ntValue),
+                A.height := lineHeight,
+                CssClass.nterm),
+              textNode(CssClass.nterm)
+            )
+          case linkTo =>
+            Seq(
+              a(
+                attr("xlink:href") := "#" + ntValue,
+                CssClass.nterm,
+                S.rect(
+                  A.width := textBoxWidth(ntValue),
+                  A.height := lineHeight,
+                  CssClass.nterm),
+                textNode(CssClass.nterm)
+              )
+            )
+        }
       case Special(sValue) =>
         val d = lineHeight / 2 - 3
-        val w = sValue.length * fontWidth + 2 * fontWidth
+        val w = textBoxWidth(sValue)
         Seq(
           S.polygon(
             CssClass.special,
@@ -135,9 +155,9 @@ object SVG {
         Seq(
           S.rect(
             CssClass.term,
-            A.rx := segmentSize * 3 / 2,
-            A.ry := segmentSize * 3 / 2,
-            A.width := s.value.length * fontWidth + 2 * fontWidth,
+            A.rx := segmentSize * 3.0 / 2,
+            A.ry := segmentSize * 3.0 / 2,
+            A.width := textBoxWidth(s.value),
             A.height := lineHeight),
           textNode(CssClass.nterm)
         )
@@ -147,17 +167,17 @@ object SVG {
   private def generateSubGraph(expr: Expr, root: Boolean = false)(implicit options: Options): SubGraph = expr match {
     case s: ebnf.Symbol if s.value.isEmpty => // not shown
       SubGraph(
-        lineHeight / 2,
-        lineHeight / 2,
+        halfLine,
+        halfLine,
         Vec(0, lineHeight),
         Nil
       )
 
     case s: ebnf.Symbol =>
       SubGraph(
-        lineHeight / 2,
-        lineHeight / 2,
-        Vec(s.value.length * fontWidth + 2 * fontWidth, lineHeight),
+        halfLine,
+        halfLine,
+        Vec(textBoxWidth(s.value), lineHeight),
         generateSymbolElements(s)
       )
 
