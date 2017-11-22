@@ -32,7 +32,8 @@ You can specify the following options:
 * `maxWidth` - maximal width of the diagram. This is **not** a hard constraint - the generator does its best to fit the diagram but it may fail to do so. It can only split top-level Sequence combinators.
 * `cssClass` - css class name used in generated SVG diagram
 * `embeddedStyle` - CSS to embed directly in SVG
-* `linker: String => String` - method used to convert NonTerminals to HTML links. By default does nothing (_ => "").
+* `linker: String => String` - method used to convert NonTerminals to HTML links. For example `"#" + _`. By default does nothing (_ => "").
+* `showNonTerm: String => String` - method used to convert NonTerminals to HTML links. For example `"#" + _`. By default does nothing (_ => "").
 
 Example
 -------

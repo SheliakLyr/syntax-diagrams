@@ -23,11 +23,11 @@ object SVG {
     * @param o y-component of output
     */
   private case class SubGraph(
-                               i: Int,
-                               o: Int,
-                               size: Vec,
-                               elements: Seq[TypedTag[String]]
-                             ) {
+     i: Int,
+     o: Int,
+     size: Vec,
+     elements: Seq[TypedTag[String]]
+   ) {
     def width: Int = size.x
 
     def height: Int = size.y
@@ -109,15 +109,14 @@ object SVG {
   private def textBoxWidth(s: String): Int = textWidth(s) + 2 * textBoxSidePadding
 
   private def generateSymbolElements(s: ebnf.Symbol)(implicit options: Options) = {
-    def textNode(clazz: scalatags.generic.AttrPair[scalatags.text.Builder, String]) = S.text(
+    def textNode(sv: String) = S.text(
       A.x := fontWidth,
       A.y := 18,
       A.fontFamily := "monospace",
       A.fontSize := "12px",
       A.fill := "white",
-      textLengthAttr := s"${s.value.length * fontWidth}px",
-      s.value)
-
+      textLengthAttr := s"${sv.length * fontWidth}px",
+      sv)
     s match {
       case NonTerminal(ntValue) =>
         options.linker(ntValue) match {
@@ -127,7 +126,7 @@ object SVG {
                 A.width := textBoxWidth(ntValue),
                 A.height := lineHeight,
                 CssClass.nterm),
-              textNode(CssClass.nterm)
+              textNode(options.showNonTerm(s.value))
             )
           case linkTo =>
             Seq(
@@ -138,7 +137,7 @@ object SVG {
                   A.width := textBoxWidth(ntValue),
                   A.height := lineHeight,
                   CssClass.nterm),
-                textNode(CssClass.nterm)
+                textNode(options.showNonTerm(s.value))
               )
             )
         }
@@ -149,7 +148,7 @@ object SVG {
           S.polygon(
             CssClass.special,
             A.points := s"0,$d $d,0 ${w - d},0 $w,$d $w,${lineHeight - d} ${w - d},$lineHeight $d,$lineHeight 0, ${lineHeight - d}"),
-          textNode(CssClass.special)
+          textNode(s.value)
         )
       case other =>
         Seq(
@@ -159,7 +158,7 @@ object SVG {
             A.ry := segmentSize * 3.0 / 2,
             A.width := textBoxWidth(s.value),
             A.height := lineHeight),
-          textNode(CssClass.nterm)
+          textNode(s.value)
         )
     }
   }
@@ -392,7 +391,8 @@ object SVG {
     maxWidth: Int = 1000,
     cssClass: String = "ebnf",
     embeddedStyle: String = "",
-    linker: String => String = _ => "")
+    linker: String => String = _ => "",
+    showNonTerm: String => String = identity)
 
   def defaultStyle(rootClass: String = "ebnf"): String = {
     s"""
