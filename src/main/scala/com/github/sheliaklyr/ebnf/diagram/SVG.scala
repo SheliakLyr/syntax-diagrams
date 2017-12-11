@@ -301,7 +301,7 @@ object SVG {
       if (!root || totalW < options.maxWidth) {
         line(subGraphs.toList)
       } else {
-        val lines = subGraphs.reverse.foldLeft[(Int, List[List[SubGraph]])]((0, List(List.empty[SubGraph]))) {
+        val lines = subGraphs.foldLeft[(Int, List[List[SubGraph]])]((0, List(List.empty[SubGraph]))) {
           case ((pos, ah :: at), sg) =>
             val diff = sg.width + 7
             if (pos + diff > options.maxWidth - 2 * 28) (diff, List(sg) :: ah :: at)
