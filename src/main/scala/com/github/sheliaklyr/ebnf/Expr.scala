@@ -30,6 +30,36 @@ sealed trait Expr {
   }
 
   /**
+    * Returns expression simplified by:
+    *  - removing unnecessary nested sequences, choices and options
+    *  - replacing 1-element seqs/choices by the element itself
+    */
+  def simplified: Expr = mapBottomUp {
+    case ret @ Choice(es) =>
+      val got = es.flatMap {
+        case Choice(es2) => es2
+        case x => Seq(x)
+      }
+      if (got.size == 1) got.head
+      else if (got.size > es.size) Choice(got)
+      else ret
+    case ret @ Sequence(es) =>
+      val got = es.flatMap {
+        case Sequence(es2) => es2
+        case x => Seq(x)
+      }
+      if (got.size == 1) got.head
+      else if (got.size > es.size) Sequence(got)
+      else ret
+    case ret @ Optional(o) =>
+      o match {
+        case _: Optional => o
+        case _ => ret
+      }
+    case otherwise => otherwise
+  }
+
+  /**
     * Applies function `f` via recursive `mapBottomUp` on each subexpression,
     * starting from the most nested expressions.
     * @return Mapped expression.

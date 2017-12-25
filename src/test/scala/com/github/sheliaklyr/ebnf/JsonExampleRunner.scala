@@ -5,7 +5,7 @@ import java.io.{BufferedOutputStream, File, FileOutputStream}
 import com.github.sheliaklyr.ebnf.diagram.SVG
 import com.github.sheliaklyr.ebnf.diagram.SVG.Options
 
-object ExamplesRunner {
+object JsonExampleRunner {
   def main(args: Array[String]) {
     val options = Options(
       maxWidth = 900,

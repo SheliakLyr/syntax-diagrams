@@ -163,7 +163,15 @@ object SVG {
     }
   }
 
-  private def generateSubGraph(expr: Expr, root: Boolean = false)(implicit options: Options): SubGraph = expr match {
+  private def mapWithState[A, S, B](source: List[A], initialState: S)(f: (A, S) => (B, S)): List[B] = {
+    source.foldLeft((initialState, List.empty[B])) {
+      case ((s, l), x) =>
+        val (b, newS) = f(x, s)
+        (newS, b :: l)
+    }._2.reverse
+  }
+
+  private def generateSubGraph(expr: Expr)(implicit options: Options): SubGraph = expr match {
     case s: ebnf.Symbol if s.value.isEmpty => // not shown
       SubGraph(
         halfLine,
@@ -185,7 +193,7 @@ object SVG {
       generateSubGraph(Choice(Special("") +: es))
 
     case Choice(ese) =>
-      val es = ese.map(generateSubGraph(_))
+      val es = ese.map(generateSubGraph(_)(decreasedMaxWidthByWrapper))
       val h = es.map(_.height).sum + ((es.size - 1) * segmentSize)
       val maxWidthElem = es.map(_.width).max
       val w = maxWidthElem + 8 * segmentSize
@@ -267,7 +275,8 @@ object SVG {
 
 
     case Sequence(es) =>
-      val subGraphs = es.map(generateSubGraph(_))
+      val expressionsWithSubGraphs = es.map(x => (x, generateSubGraph(x)(decreasedMaxWidthByWrapper)))
+      val subGraphs = expressionsWithSubGraphs.map(_._2)
       val totalW = subGraphs.map(_.width).sum + ((subGraphs.size - 1) * segmentSize)
 
       def line(graphs: List[SubGraph]) = {
@@ -282,12 +291,18 @@ object SVG {
           case ((prevOutput, h), sg) =>
             (prevOutput + sg.inputsDiff, h max (prevOutput + sg.belowInput))
         }
-        val (_, res) = graphs.foldLeft((Vec(0, input), List.empty[Tag])) {
-          case ((pos, acc), sg@SubGraph(_, _, Vec(lw, _), el)) =>
-            (pos + Vec(lw + 7, sg.inputsDiff), sg.translated(pos.x, pos.y - sg.i) :: acc)
-        }
-        val els = path().m(0, input).h(w).toPath :: res.reverse
-        SubGraph(input, input + totalDiff, Vec(w, resultHeight), els)
+
+        val res = mapWithState[SubGraph, Vec, Seq[Tag]](graphs, Vec(0, input)) {
+          case (sg@SubGraph(_, _, Vec(lw, _), el), pos) =>
+            val newS = pos + Vec(lw + 7, sg.inputsDiff)
+            val movedElement = sg.translated(pos.x, pos.y - sg.i)
+            def connection = path().M(pos.x, pos.y).h(-segmentSize).toPath
+            val els = if (pos.x == 0) Seq(movedElement)
+            else Seq(connection, movedElement)
+            (els, newS)
+        }.flatten
+
+        SubGraph(input, input + totalDiff, Vec(w, resultHeight), res)
       }
 
       def place[X, T](graphs: List[X])(f: (Vec, X) => (Vec, T)) = {
@@ -298,7 +313,7 @@ object SVG {
         }._2.reverse
       }
 
-      if (!root || totalW < options.maxWidth) {
+      if (totalW < options.maxWidth) {
         line(subGraphs.toList)
       } else {
         val lines = subGraphs.foldLeft[(Int, List[List[SubGraph]])]((0, List(List.empty[SubGraph]))) {
@@ -306,24 +321,29 @@ object SVG {
             val diff = sg.width + 7
             if (pos + diff > options.maxWidth - 2 * 28) (diff, List(sg) :: ah :: at)
             else (pos + diff, (sg :: ah) :: at)
-        }._2.map(sgs => line(sgs.reverse))
+        }._2.filter(_.nonEmpty).map(sgs => line(sgs.reverse)).reverse
 
         val linesSize = lines.size
         val maxLineWidth = lines.map(_.width).max
 
         val entry = path().m(0, 14).h(28).toPath
 
-        val linesElements = place(lines.reverse.zipWithIndex) {
+        val output = lines.tail.init.map(_.height).sum + ((lines.size - 2) * 28) + lines.last.o + lines.head.belowOutput
+
+        val linesElements = place(lines.zipWithIndex) {
           case (pos, (sg, idx)) =>
             val joinNext =
               if (idx + 1 == linesSize) path()
-                .m(pos.x + 28 + sg.width, pos.y + sg.i)
-                .h(maxLineWidth - sg.width + 28)
+                .m(pos.x + 28 + sg.width, pos.y + sg.o)
+                .h(maxLineWidth - sg.width + 14)
+                .curve(Right, Up)
+                .v(- output)
+                .curve(Up, Right)
                 .toPath
               else path()
-                .m(pos.x + 28 + sg.width, pos.y + sg.i)
+                .m(pos.x + 28 + sg.width, pos.y + sg.o)
                 .curve(Right, Down)
-                .v(sg.height - 28)
+                .v(sg.height - sg.o - sg.i)
                 .curve(Down, Left)
                 .h(-sg.width)
                 .curve(Left, Down)
@@ -332,10 +352,8 @@ object SVG {
             (pos + Vec(0, sg.height + 28), List(joinNext, sg.translated(pos.x + 28, pos.y)))
         }.flatten
 
-        val output = lines.tail.map(_.height).sum + (lines.size * 28 - 28) + lines.head.o
-
         SubGraph(
-          14, output, Vec(maxLineWidth + 28 * 2, lines.map(_.height).sum + (lines.size * 28 - 28)),
+          14, 14, Vec(maxLineWidth + 28 * 2 + 14, lines.map(_.height).sum + (lines.size * 28 - 28)),
           entry :: linesElements
         )
       }
@@ -343,7 +361,7 @@ object SVG {
 
     // optimized * for single element
     case Optional(Repeat(s: ebnf.Symbol)) =>
-      val e = generateSubGraph(s)
+      val e = generateSubGraph(s)(decreasedMaxWidthByWrapper)
       val w = e.width + 8 * segmentSize
       val h = e.height + 4 * segmentSize
       val els = List(
@@ -366,7 +384,7 @@ object SVG {
       generateSubGraph(Choice(Seq(Special(""), es)))
 
     case Repeat(es) =>
-      val e = generateSubGraph(es)
+      val e = generateSubGraph(es)(decreasedMaxWidthByWrapper)
       val w = e.width + 8 * segmentSize
       val h = e.height + 4 * segmentSize
       val els = List(
@@ -442,8 +460,14 @@ object SVG {
        |""".stripMargin.trim
   }
 
+  private def decreasedMaxWidthByWrapper(implicit options: Options) = decreasedMaxWidth(segmentSize * 8)
+
+  private def decreasedMaxWidth(pixels: Int)(implicit options: Options) = options.copy(maxWidth = options.maxWidth - pixels)
+
   def createDiagram(rhs: Expr, options: Options = Options()): Tag = {
-    val elements = generateSubGraph(rhs, root = true)(options)
+    // remove unneeded elements
+    val simplified = rhs.simplified
+    val elements = generateSubGraph(simplified)(decreasedMaxWidth(62)(options))
 
     def triangle(posx: Int, posy: Int) = S.polygon(
       A.points := s"$posx ${posy - 5}, $posx ${posy + 5}, ${posx + 10} $posy",

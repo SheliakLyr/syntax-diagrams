@@ -29,7 +29,7 @@ def createDiagram(rhs: Expr, options: Options = Options()): Tag
 ```
 
 You can specify the following options:
-* `maxWidth` - maximal width of the diagram. This is **not** a hard constraint - the generator does its best to fit the diagram but it may fail to do so. It can only split top-level Sequence combinators.
+* `maxWidth` - maximal width of the diagram. This is **not** a hard constraint - the generator does its best to fit the diagram but it may fail to do so.
 * `cssClass` - css class name used in generated SVG diagram
 * `embeddedStyle` - CSS to embed directly in SVG
 * `linker: String => String` - method used to convert NonTerminals to HTML links. For example `"#" + _`. By default does nothing (_ => "").
@@ -38,7 +38,7 @@ You can specify the following options:
 Example
 -------
 
-See [ExamplesRunner.scala](src/test/scala/com/github/sheliaklyr/ebnf/ExamplesRunner.scala) 
+See [JsonExampleRunner.scala](src/test/scala/com/github/sheliaklyr/ebnf/JsonExampleRunner.scala)
 for example that generates a single html page with syntax diagrams for JSON. 
 You can see the generated page here: 
 [JSON Syntax](https://sheliaklyr.github.io/syntax-diagrams/) 
