@@ -1,8 +1,9 @@
 package com.github.sheliaklyr.ebnf
 
-import org.scalatest.{FreeSpec, MustMatchers}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-class GrammarSuite extends FreeSpec with MustMatchers {
+class GrammarSuite extends AnyFreeSpec with Matchers {
   "inline" in {
     import Ebnf._
     val g = Grammar(

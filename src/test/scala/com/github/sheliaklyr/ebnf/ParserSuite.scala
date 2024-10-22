@@ -1,10 +1,11 @@
 package com.github.sheliaklyr.ebnf
 
-import org.scalatest._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-class ParserSuite extends FreeSpec {
+class ParserSuite extends AnyFreeSpec with Matchers {
   "parse abnf" in {
-    val read = io.Source.fromFile("examples/ebnf.ebnf").getLines.mkString("\n")
-    Parser.ebnf.parse(read)
+    val read: String = io.Source.fromFile("examples/ebnf.ebnf").getLines.mkString("\n")
+    fastparse.parse(read, Parser.ebnf(_)).get
   }
 }
